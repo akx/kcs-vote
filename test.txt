@@ -1,0 +1,6 @@
+teppo 1
+ana 2
+renne 3
+renne 1
+teppo 2
+ana 3
