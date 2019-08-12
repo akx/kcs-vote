@@ -15,9 +15,10 @@ with open(args.file) as infp:
 		if not line:
 			continue
 		name, num = line.split(None, 1)
+		num = int(num)
 		assert num <= 5
-		num = fractions.Fraction(1, int(num))
-		votes[name.title()].append(num)
+		frac = fractions.Fraction(1, num)
+		votes[name.title()].append(frac)
 
 table = [
 	(
