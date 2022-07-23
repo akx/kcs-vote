@@ -4,7 +4,7 @@ from collections import defaultdict, Counter
 from tabulate import tabulate
 
 
-def format_pos(position, primary_count):
+def format_pos(position: int, primary_count: int) -> str:
     if primary_count:
         if position <= primary_count:
             return f"#{position}"
@@ -12,22 +12,31 @@ def format_pos(position, primary_count):
     return f"#{position}"
 
 
-def format_table(votes, primary_count):
+def format_individual_votes(name_votes: list[fractions.Fraction]) -> str:
+    formatted_votes = Counter(f"{v.numerator}/{v.denominator}" for v in name_votes)
+    return ", ".join(
+        [f"{vote}: {count}" for (vote, count) in formatted_votes.most_common()]
+    )
+
+
+def format_table_row(
+    pos: int, name: str, name_votes: list[fractions.Fraction], *, primary_count: int
+):
+    score = sum(name_votes)
+    return (
+        format_pos(pos, primary_count),
+        name,
+        float(score),
+        str(score),
+        format_individual_votes(name_votes),
+    )
+
+
+def format_table(
+    votes: dict[str, list[fractions.Fraction]], primary_count: int
+) -> None:
     table = [
-        (
-            format_pos(pos, primary_count),
-            name,
-            float(sum(name_votes)),
-            str(sum(name_votes)),
-            ", ".join(
-                [
-                    f"{vote}: {count}"
-                    for (vote, count) in Counter(
-                    f"{v.numerator}/{v.denominator}" for v in name_votes
-                    ).most_common()
-                ]
-            ),
-        )
+        format_table_row(pos, name, name_votes, primary_count=primary_count)
         for pos, (name, name_votes) in enumerate(
             sorted(votes.items(), key=lambda p: sum(p[1]), reverse=True),
             1,
