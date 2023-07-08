@@ -49,6 +49,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("file")
     ap.add_argument("-c", "--count", type=int, required=True)
+    ap.add_argument("-r", "--reverse", action="store_true", default=False)
     args = ap.parse_args()
     primary_count = args.count
     if primary_count < 1:
@@ -62,6 +63,8 @@ def main():
             if not line:
                 continue
             name, num = line.split(None, 1)
+            if args.reverse:
+                name, num = num, name
             num = int(num)
             if not (1 <= num <= primary_count):
                 raise ValueError(f"invalid line: {line}")
